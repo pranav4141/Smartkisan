@@ -1,0 +1,28 @@
+{
+  "placeholderImages": [
+    {
+      "id": "farm-hero",
+      "description": "Lush green farm fields under a clear sky",
+      "imageUrl": "https://picsum.photos/seed/farm1/1200/400",
+      "imageHint": "green farm"
+    },
+    {
+      "id": "disease-scan",
+      "description": "Close up of a plant leaf with spots",
+      "imageUrl": "https://picsum.photos/seed/leaf1/600/400",
+      "imageHint": "plant disease"
+    },
+    {
+      "id": "community-post-1",
+      "description": "Farmer standing in a field",
+      "imageUrl": "https://picsum.photos/seed/farmer1/600/400",
+      "imageHint": "farmer field"
+    },
+    {
+      "id": "wheat-crop",
+      "description": "Wheat crop close up",
+      "imageUrl": "https://picsum.photos/seed/wheat/400/300",
+      "imageHint": "wheat crop"
+    }
+  ]
+}

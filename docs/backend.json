@@ -1,0 +1,666 @@
+{
+  "entities": {
+    "User": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "User",
+      "type": "object",
+      "description": "Represents a farmer using the SmartKisan application, storing their profile and contact information.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the User entity."
+        },
+        "name": {
+          "type": "string",
+          "description": "The full name of the farmer."
+        },
+        "phoneNumber": {
+          "type": "string",
+          "description": "The phone number of the farmer, used for authentication and contact."
+        },
+        "village": {
+          "type": "string",
+          "description": "The village where the farmer resides or operates their farm."
+        },
+        "district": {
+          "type": "string",
+          "description": "The district where the farmer resides or operates their farm."
+        },
+        "state": {
+          "type": "string",
+          "description": "The state where the farmer resides or operates their farm."
+        },
+        "farmSize": {
+          "type": "number",
+          "description": "The total estimated size of the farmer's land in a suitable unit (e.g., acres, hectares)."
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp when the user account was created.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "phoneNumber",
+        "village",
+        "district",
+        "state",
+        "farmSize",
+        "createdAt"
+      ]
+    },
+    "Farm": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Farm",
+      "type": "object",
+      "description": "Represents an individual farm owned by a user, allowing for management of multiple farming locations.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Farm entity."
+        },
+        "ownerId": {
+          "type": "string",
+          "description": "Reference to the User who owns this farm. (Relationship: User 1:N Farm)"
+        },
+        "farmName": {
+          "type": "string",
+          "description": "A user-defined name for the farm."
+        },
+        "location": {
+          "type": "string",
+          "description": "Geographical location details of the farm (e.g., village, coordinates)."
+        },
+        "soilType": {
+          "type": "string",
+          "description": "The type of soil prevalent in this farm (e.g., 'Loamy', 'Sandy', 'Clay')."
+        },
+        "areaSize": {
+          "type": "number",
+          "description": "The specific area size of this farm in a suitable unit."
+        }
+      },
+      "required": [
+        "id",
+        "ownerId",
+        "farmName",
+        "location",
+        "soilType",
+        "areaSize"
+      ]
+    },
+    "IrrigationDevice": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "IrrigationDevice",
+      "type": "object",
+      "description": "Represents a SIM-based irrigation controller installed in a farm, enabling remote control.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the IrrigationDevice entity."
+        },
+        "ownerId": {
+          "type": "string",
+          "description": "Reference to the User who owns this irrigation device. (Relationship: User 1:N IrrigationDevice)"
+        },
+        "deviceName": {
+          "type": "string",
+          "description": "A user-defined name for the irrigation device."
+        },
+        "simNumber": {
+          "type": "string",
+          "description": "The SIM card number installed in the device for communication."
+        },
+        "farmId": {
+          "type": "string",
+          "description": "Reference to the Farm where this device is installed. (Relationship: Farm 1:N IrrigationDevice)"
+        },
+        "status": {
+          "type": "string",
+          "description": "Current operational status of the irrigation device (ON/OFF).",
+          "items": {
+            "type": "string"
+          }
+        },
+        "lastActive": {
+          "type": "string",
+          "description": "Timestamp of the last known activity or status update from the device.",
+          "format": "date-time"
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp when the irrigation device was registered.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "ownerId",
+        "deviceName",
+        "simNumber",
+        "farmId",
+        "status",
+        "lastActive",
+        "createdAt"
+      ]
+    },
+    "IrrigationLog": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "IrrigationLog",
+      "type": "object",
+      "description": "Records the history of irrigation activities performed by devices.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the IrrigationLog entity."
+        },
+        "deviceId": {
+          "type": "string",
+          "description": "Reference to the IrrigationDevice that performed the action. (Relationship: IrrigationDevice 1:N IrrigationLog)"
+        },
+        "action": {
+          "type": "string",
+          "description": "The action performed (e.g., 'ON', 'OFF').",
+          "items": {
+            "type": "string"
+          }
+        },
+        "timestamp": {
+          "type": "string",
+          "description": "Timestamp when the irrigation action occurred.",
+          "format": "date-time"
+        },
+        "duration": {
+          "type": "number",
+          "description": "The duration of the irrigation action in minutes."
+        }
+      },
+      "required": [
+        "id",
+        "deviceId",
+        "action",
+        "timestamp",
+        "duration"
+      ]
+    },
+    "IrrigationSchedule": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "IrrigationSchedule",
+      "type": "object",
+      "description": "Defines automated watering schedules for irrigation devices.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the IrrigationSchedule entity."
+        },
+        "deviceId": {
+          "type": "string",
+          "description": "Reference to the IrrigationDevice for which this schedule is set. (Relationship: IrrigationDevice 1:N IrrigationSchedule)"
+        },
+        "startTime": {
+          "type": "string",
+          "description": "The scheduled start date and time for irrigation.",
+          "format": "date-time"
+        },
+        "durationMinutes": {
+          "type": "number",
+          "description": "The planned duration of the irrigation cycle in minutes."
+        },
+        "active": {
+          "type": "boolean",
+          "description": "Indicates whether the schedule is currently active or paused."
+        }
+      },
+      "required": [
+        "id",
+        "deviceId",
+        "startTime",
+        "durationMinutes",
+        "active"
+      ]
+    },
+    "CropAdvisory": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "CropAdvisory",
+      "type": "object",
+      "description": "Stores general crop recommendations based on various factors like soil type and season.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the CropAdvisory entity."
+        },
+        "cropName": {
+          "type": "string",
+          "description": "The name of the crop for which the advisory is provided."
+        },
+        "soilType": {
+          "type": "string",
+          "description": "The recommended soil type for this crop."
+        },
+        "season": {
+          "type": "string",
+          "description": "The recommended season for planting or growing this crop."
+        },
+        "fertilizerRecommendation": {
+          "type": "string",
+          "description": "Guidelines on fertilizer usage for the crop."
+        },
+        "irrigationSchedule": {
+          "type": "string",
+          "description": "General recommended irrigation schedule for the crop."
+        },
+        "pestControlMethods": {
+          "type": "string",
+          "description": "Recommended methods for pest control for the crop."
+        }
+      },
+      "required": [
+        "id",
+        "cropName",
+        "soilType",
+        "season",
+        "fertilizerRecommendation",
+        "irrigationSchedule",
+        "pestControlMethods"
+      ]
+    },
+    "MarketPrice": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "MarketPrice",
+      "type": "object",
+      "description": "Stores up-to-date market prices for crops from various markets.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the MarketPrice entry."
+        },
+        "cropName": {
+          "type": "string",
+          "description": "The name of the crop."
+        },
+        "marketName": {
+          "type": "string",
+          "description": "The name of the market (mandi) where the price is recorded."
+        },
+        "pricePerQuintal": {
+          "type": "number",
+          "description": "The price of the crop per quintal."
+        },
+        "state": {
+          "type": "string",
+          "description": "The state where the market is located."
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Timestamp when the market price data was last updated.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "cropName",
+        "marketName",
+        "pricePerQuintal",
+        "state",
+        "updatedAt"
+      ]
+    },
+    "CommunityPost": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "CommunityPost",
+      "type": "object",
+      "description": "Represents a post in the farmer community forum, allowing discussions among users.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the CommunityPost entity."
+        },
+        "authorId": {
+          "type": "string",
+          "description": "Reference to the User who created the post. (Relationship: User 1:N CommunityPost)"
+        },
+        "text": {
+          "type": "string",
+          "description": "The main content text of the post."
+        },
+        "imageUrl": {
+          "type": "string",
+          "description": "Optional URL to an image attached to the post.",
+          "format": "uri"
+        },
+        "likes": {
+          "type": "number",
+          "description": "The number of likes the post has received."
+        },
+        "commentsCount": {
+          "type": "number",
+          "description": "The total number of comments on the post."
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp when the post was created.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "authorId",
+        "text",
+        "likes",
+        "commentsCount",
+        "createdAt"
+      ]
+    },
+    "Comment": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Comment",
+      "type": "object",
+      "description": "Represents a reply or comment on a CommunityPost.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Comment entity."
+        },
+        "postId": {
+          "type": "string",
+          "description": "Reference to the CommunityPost this comment belongs to. (Relationship: CommunityPost 1:N Comment)"
+        },
+        "authorId": {
+          "type": "string",
+          "description": "Reference to the User who authored the comment. (Relationship: User 1:N Comment)"
+        },
+        "text": {
+          "type": "string",
+          "description": "The content text of the comment."
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp when the comment was created.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "postId",
+        "authorId",
+        "text",
+        "createdAt"
+      ]
+    },
+    "DiseaseScan": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "DiseaseScan",
+      "type": "object",
+      "description": "Stores the history and results of plant disease scans performed by users using AI.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the DiseaseScan entity."
+        },
+        "userId": {
+          "type": "string",
+          "description": "Reference to the User who performed the scan. (Relationship: User 1:N DiseaseScan)"
+        },
+        "imageUrl": {
+          "type": "string",
+          "description": "URL to the image of the plant that was scanned for disease.",
+          "format": "uri"
+        },
+        "diseaseName": {
+          "type": "string",
+          "description": "The name of the detected plant disease."
+        },
+        "confidence": {
+          "type": "number",
+          "description": "The confidence score or probability of the disease detection, typically a value between 0 and 1."
+        },
+        "preventionReasons": {
+          "type": "array",
+          "description": "A list of reasons why the disease might have occurred and how to prevent it in the future.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "fixSuggestions": {
+          "type": "array",
+          "description": "A list of suitable fixes or treatment advice for the detected disease, provided in point format.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "timestamp": {
+          "type": "string",
+          "description": "Timestamp when the disease scan was performed.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "userId",
+        "imageUrl",
+        "diseaseName",
+        "confidence",
+        "preventionReasons",
+        "fixSuggestions",
+        "timestamp"
+      ]
+    }
+  },
+  "auth": {
+    "providers": [
+      "password",
+      "anonymous"
+    ]
+  },
+  "firestore": {
+    "structure": [
+      {
+        "path": "/users/{userId}",
+        "definition": {
+          "entityName": "User",
+          "schema": {
+            "$ref": "#/backend/entities/User"
+          },
+          "description": "Stores individual user profiles. Access is restricted to the authenticated user via their 'userId' matching 'request.auth.uid'.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier of the user, corresponding to Firebase Authentication UID."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/users/{userId}/farms/{farmId}",
+        "definition": {
+          "entityName": "Farm",
+          "schema": {
+            "$ref": "#/backend/entities/Farm"
+          },
+          "description": "Stores farm details owned by a specific user. Includes denormalized 'ownerId' for authorization independence, ensuring 'ownerId' matches the path's 'userId' and 'request.auth.uid'.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier of the user who owns the farm."
+            },
+            {
+              "name": "farmId",
+              "description": "The unique identifier for a specific farm."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/users/{userId}/farms/{farmId}/irrigationDevices/{deviceId}",
+        "definition": {
+          "entityName": "IrrigationDevice",
+          "schema": {
+            "$ref": "#/backend/entities/IrrigationDevice"
+          },
+          "description": "Stores details of irrigation devices installed on a specific farm, owned by a specific user. Includes denormalized 'ownerId' for authorization independence.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier of the user who owns the irrigation device."
+            },
+            {
+              "name": "farmId",
+              "description": "The unique identifier of the farm where the device is installed."
+            },
+            {
+              "name": "deviceId",
+              "description": "The unique identifier for a specific irrigation device."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/users/{userId}/farms/{farmId}/irrigationDevices/{deviceId}/irrigationLogs/{logId}",
+        "definition": {
+          "entityName": "IrrigationLog",
+          "schema": {
+            "$ref": "#/backend/entities/IrrigationLog"
+          },
+          "description": "Records historical irrigation activities for a specific device. This entity requires denormalized 'ownerId' (from the user) to ensure Authorization Independence for security rules.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier of the user who owns the device associated with this log."
+            },
+            {
+              "name": "farmId",
+              "description": "The unique identifier of the farm associated with the device."
+            },
+            {
+              "name": "deviceId",
+              "description": "The unique identifier of the irrigation device that performed the action."
+            },
+            {
+              "name": "logId",
+              "description": "The unique identifier for a specific irrigation log entry."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/users/{userId}/farms/{farmId}/irrigationDevices/{deviceId}/irrigationSchedules/{scheduleId}",
+        "definition": {
+          "entityName": "IrrigationSchedule",
+          "schema": {
+            "$ref": "#/backend/entities/IrrigationSchedule"
+          },
+          "description": "Defines automated irrigation schedules for a specific device. This entity requires denormalized 'ownerId' (from the user) to ensure Authorization Independence for security rules.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier of the user who owns the device associated with this schedule."
+            },
+            {
+              "name": "farmId",
+              "description": "The unique identifier of the farm associated with the device."
+            },
+            {
+              "name": "deviceId",
+              "description": "The unique identifier of the irrigation device for which the schedule is set."
+            },
+            {
+              "name": "scheduleId",
+              "description": "The unique identifier for a specific irrigation schedule."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/users/{userId}/diseaseScans/{scanId}",
+        "definition": {
+          "entityName": "DiseaseScan",
+          "schema": {
+            "$ref": "#/backend/entities/DiseaseScan"
+          },
+          "description": "Stores the history and results of AI plant disease scans performed by a user. Includes 'userId' for authorization independence.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier of the user who performed the scan."
+            },
+            {
+              "name": "scanId",
+              "description": "The unique identifier for a specific disease scan."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/cropAdvisories/{advisoryId}",
+        "definition": {
+          "entityName": "CropAdvisory",
+          "schema": {
+            "$ref": "#/backend/entities/CropAdvisory"
+          },
+          "description": "Contains general crop recommendations. This collection is publicly readable by all authenticated users and primarily managed by administrators.",
+          "params": [
+            {
+              "name": "advisoryId",
+              "description": "The unique identifier for a specific crop advisory."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/marketPrices/{priceId}",
+        "definition": {
+          "entityName": "MarketPrice",
+          "schema": {
+            "$ref": "#/backend/entities/MarketPrice"
+          },
+          "description": "Stores up-to-date market prices for crops. This collection is publicly readable by all authenticated users and primarily managed by administrators.",
+          "params": [
+            {
+              "name": "priceId",
+              "description": "The unique identifier for a specific market price entry."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/communityPosts/{postId}",
+        "definition": {
+          "entityName": "CommunityPost",
+          "schema": {
+            "$ref": "#/backend/entities/CommunityPost"
+          },
+          "description": "Stores posts for the farmer community forum. All authenticated users can read, but only the 'authorId' can write, update, or delete their posts. Includes 'authorId' for authorization.",
+          "params": [
+            {
+              "name": "postId",
+              "description": "The unique identifier for a specific community post."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/communityPosts/{postId}/comments/{commentId}",
+        "definition": {
+          "entityName": "Comment",
+          "schema": {
+            "$ref": "#/backend/entities/Comment"
+          },
+          "description": "Stores comments on community forum posts. All authenticated users can read, but only the 'authorId' can write, update, or delete their comments. Includes 'authorId' for authorization independence.",
+          "params": [
+            {
+              "name": "postId",
+              "description": "The unique identifier of the community post this comment belongs to."
+            },
+            {
+              "name": "commentId",
+              "description": "The unique identifier for a specific comment."
+            }
+          ]
+        }
+      }
+    ],
+    "reasoning": "The Firestore structure is designed following the core principles of Authorization Independence, Structural Segregation, and Access Modeling to ensure security, scalability, and debuggability. All collection paths leverage semantic naming for clarity.\n\n**Authorization Independence via Denormalization:**\nTo eliminate the need for `get()` calls in Firestore Security Rules and enable atomic operations, authorization context is denormalized where necessary. For instance:\n*   User-owned entities like `Farm`, `IrrigationDevice`, and `DiseaseScan` are structured hierarchically under `/users/{userId}/...`. Each document explicitly includes `ownerId` or `userId` (which maps to `request.auth.uid` through the path parameter). This allows rules to directly verify `request.auth.uid == resource.data.ownerId` or `request.auth.uid == resource.data.userId` without looking up parent documents.\n*   For deeply nested entities such as `IrrigationLog` and `IrrigationSchedule`, which logically belong to an `IrrigationDevice` (which belongs to a `Farm`, which belongs to a `User`), the `ownerId` (of the user) is denormalized into the `IrrigationLog` and `IrrigationSchedule` documents. This ensures that a rule applied to an `IrrigationLog` can verify `resource.data.ownerId == request.auth.uid` directly, maintaining Authorization Independence even at deep levels of the hierarchy.\n*   `CommunityPost` and `Comment` documents include `authorId`, allowing rules to easily verify ownership for write operations.\n\n**QAPs (Rules are not Filters) Support:**\nThis design inherently supports the Query as Authorization Primitives (QAPs) principle by:\n*   **Path-Based Ownership:** For private, user-specific data (e.g., `/users/{userId}/farms`, `/users/{userId}/diseaseScans`), the top-level `/users/{userId}` path ensures that queries implicitly restrict results to the authenticated user's data. Rules will enforce that `{userId}` in the path matches `request.auth.uid`, making all list operations inherently secure and efficient without needing server-side filtering.\n*   **Structural Segregation for Public Data:** Publicly accessible, read-only data like `CropAdvisory` and `MarketPrice` are placed in top-level collections (`/cropAdvisories`, `/marketPrices`). These collections have a homogeneous security posture (read-all for authenticated users), meaning list operations on them are straightforward and do not require complex filtering by rules.\n*   **Community Forum Design:** `communityPosts` is a top-level collection (`/communityPosts`). This design permits `list` operations to return all posts to any authenticated user, supporting a discoverable public forum. Write, update, and delete operations are then restricted based on the `authorId` within the document, demonstrating how structural segregation allows for broad read access while maintaining granular write control without filtering reads.\n\nThis structure prioritizes security, performance, and maintainability, making the Firestore Security Rules simpler and less error-prone."
+  }
+}
